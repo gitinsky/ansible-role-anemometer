@@ -37,3 +37,6 @@
 
 - name: put a cron task
   template: src=anemometer dest=/etc/cron.d/anemometer
+
+- name: put Anemometer web config
+  template: src=config.inc.php dest=/var/www/anemometer/conf/config.inc.php
