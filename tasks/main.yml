@@ -1,0 +1,39 @@
+---
+- name: install Percona Toolkit
+  apt: name=percona-toolkit state=present
+
+- name: checkout Anemometer
+  git: repo=https://github.com/box/Anemometer.git dest=/var/www/anemometer
+
+- name: check if slow_query_log DB exists
+  shell: mysqlshow | grep slow_query_log
+  register: result
+  ignore_errors: true
+
+- name: install slow_query_log
+  shell: cd /var/www/anemometer && mysql < install.sql
+  when: result|failed
+
+- name: check if anemometer can connect
+  shell: mysql -h {{ anemometer_mysql_ip }} -u anemometer --password={{ anemometer_mysql_password }} -e 'select 1' slow_query_log
+  register: result
+  ignore_errors: true
+
+- name: grant privileges
+  shell: mysql -e "grant ALL ON slow_query_log.* to 'anemometer'@'%' IDENTIFIED BY '{{ anemometer_mysql_password }}';"
+  when: result|failed
+
+- name: get pt-query-digest version
+  shell: pt-query-digest --version | awk '{print $2}'
+  register: version
+
+- name: put < 2.2 script
+  template: src=anemometer_lessthan2.2.sh dest=/root/anemometer.sh mode=0755
+  when: version < '2.2'
+
+- name: put >= 2.2 script
+  template: src=anemometer_gethan2.2.sh dest=/root/anemometer.sh mode=0755
+  when: version >= '2.2'
+
+- name: put a cron task
+  template: src=anemometer dest=/etc/cron.d/anemometer
