@@ -26,3 +26,6 @@
 - name: put anemometer template
   template: src=anemometer.conf dest=/etc/nginx/conf.d/anemometer.conf
   notify: restart nginx
+
+- name: put htpasswd.anemometer
+  template: src=htpasswd.anemometer dest=/etc/nginx/htpasswd.anemometer
