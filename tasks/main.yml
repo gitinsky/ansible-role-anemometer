@@ -34,14 +34,17 @@
 
 - name: put < 2.2 script
   template: src=anemometer_lessthan2.2.sh dest=/root/anemometer.sh mode=0755
-  when: version < '2.2'
+  when: "{{ version | version_compare('2.2', '<') }}"
 
 - name: put >= 2.2 script
   template: src=anemometer_gethan2.2.sh dest=/root/anemometer.sh mode=0755
-  when: version >= '2.2'
+  when: "{{ version | version_compare('2.2', '>=') }}"
 
 - name: put a cron task
   template: src=anemometer dest=/etc/cron.d/anemometer
 
 - name: put Anemometer web config
   template: src=config.inc.php dest=/var/www/anemometer/conf/config.inc.php
+
+- include: install_nginx.yml
+  when: install_nginx
