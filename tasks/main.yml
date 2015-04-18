@@ -1,6 +1,11 @@
 ---
 - name: install Percona Toolkit
   apt: name=percona-toolkit state=present
+  when: ansible_os_family == 'Debian'
+
+- name: install Percona Toolkit
+  yum: name=percona-toolkit state=present
+  when: ansible_os_family == 'RedHat'
 
 - name: checkout Anemometer
   git: repo=https://github.com/box/Anemometer.git dest=/var/www/anemometer
