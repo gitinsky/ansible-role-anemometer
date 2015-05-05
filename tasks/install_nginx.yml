@@ -1,27 +1,56 @@
 - name: install nginx
   yum: name=nginx state=present
+  when: ansible_os_family  == "RedHat"
+
+- name: install nginx
+  apt: name=nginx state=present
+  when: ansible_os_family  == "Debian"
 
 - name: install php-fpm
   yum: name=php-fpm state=present
+  when: ansible_os_family  == "RedHat"
+
+- name: install php5-fpm
+  apt: name=php5-fpm state=present
+  when: ansible_os_family  == "Debian"
 
 - name: install bcmath
   yum: name=php-bcmath state=present
+  when: ansible_os_family  == "RedHat"
 
 - name: create /var/lib/php/session
   file: state=directory path=/var/lib/php/session owner=apache group=apache
+  when: ansible_os_family  == "RedHat"
 
 - name: install php-mysql
   yum: name=php-mysql state=present
+  when: ansible_os_family  == "RedHat"
 
 - name: set catch_workers_output to yes
   lineinfile: dest=/etc/php-fpm.d/www.conf regexp='^;?catch_workers_output' line='catch_workers_output = yes'
   notify: restart php-fpm
+  when: ansible_os_family  == "RedHat"
+
+- name: set catch_workers_output to yes
+  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp='^;?catch_workers_output' line='catch_workers_output = yes'
+  notify: restart php-fpm
+  when: ansible_os_family  == "Debian"
+
+- name: set host:port to 127.0.0.1:9000
+  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp='^listen =' line='listen = 127.0.0.1:9000'
+  notify: restart php-fpm
+  when: ansible_os_family  == "Debian"
 
 - name: start nginx
   service: name=nginx state=started enabled=yes
 
 - name: start php-fpm
   service: name=php-fpm state=started enabled=yes
+  when: ansible_os_family  == "RedHat"
+
+- name: start php5-fpm
+  service: name=php5-fpm state=started enabled=yes
+  when: ansible_os_family  == "Debian"
 
 - name: put anemometer template
   template: src=anemometer.conf dest=/etc/nginx/conf.d/anemometer.conf
