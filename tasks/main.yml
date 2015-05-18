@@ -11,21 +11,21 @@
   git: repo=https://github.com/box/Anemometer.git dest=/var/www/anemometer
 
 - name: check if slow_query_log DB exists
-  shell: mysqlshow | grep slow_query_log
+  shell: "{{ mysqlshow_bin }} | grep slow_query_log"
   register: result
   ignore_errors: true
 
 - name: install slow_query_log
-  shell: cd /var/www/anemometer && mysql < install.sql
+  shell: cd /var/www/anemometer && {{ mysql_client }} < install.sql
   when: result|failed
 
 - name: check if anemometer can connect
-  shell: mysql -h {{ anemometer_mysql_ip }} -u anemometer --password={{ anemometer_mysql_password }} -e 'select 1' slow_query_log
+  shell: "{{ mysql_client }} -h {{ anemometer_mysql_ip }} -u anemometer --password={{ anemometer_mysql_password }} -e 'select 1' slow_query_log"
   register: result
   ignore_errors: true
 
 - name: grant privileges
-  shell: mysql -e "grant ALL ON slow_query_log.* to 'anemometer'@'%' IDENTIFIED BY '{{ anemometer_mysql_password }}';"
+  shell: "{{ mysql_client }} -e \"grant ALL ON slow_query_log.* to 'anemometer'@'%' IDENTIFIED BY '{{ anemometer_mysql_password }}';\""
   when: result|failed
 
 - name: get pt-query-digest version
