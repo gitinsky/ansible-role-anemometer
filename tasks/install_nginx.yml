@@ -37,7 +37,7 @@
   when: ansible_os_family  == "Debian"
 
 - name: set host:port to 127.0.0.1:9000
-  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp='^listen =' line='listen = 127.0.0.1:9000'
+  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp='^listen =' line='listen = {{ anemometer_php_fpm_port }}'
   notify: restart php-fpm
   when: ansible_os_family  == "Debian"
 
