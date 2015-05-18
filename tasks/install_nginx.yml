@@ -2,8 +2,8 @@
   yum: name=nginx state=present
   when: ansible_os_family  == "RedHat"
 
-- name: install nginx
-  apt: name=nginx state=present
+- name: install {{ ubuntu_nginx_package_name }}
+  apt: name={{ ubuntu_nginx_package_name }} state=present
   when: ansible_os_family  == "Debian"
 
 - name: install php-fpm
@@ -25,6 +25,10 @@
 - name: install php-mysql
   yum: name=php-mysql state=present
   when: ansible_os_family  == "RedHat"
+
+- name: install php5-mysql
+  apt: name=php5-mysql state=present
+  when: ansible_os_family  == "Debian"
 
 - name: set catch_workers_output to yes
   lineinfile: dest=/etc/php-fpm.d/www.conf regexp='^;?catch_workers_output' line='catch_workers_output = yes'

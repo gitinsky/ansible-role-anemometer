@@ -3,3 +3,6 @@ mysqlshow_bin: mysqlshow
 mysql_client: mysql
 anemometer_mysql_ip: 127.0.0.1
 anemometer_php_fpm_port: '127.0.0.1:9000'
+anemometer_slow_log_path: /var/log/mysql/mysql-slow.log
+ubuntu_nginx_package_name: nginx
+anemometer_php_fpm_port_nginx: '127.0.0.1:9000'
