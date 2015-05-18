@@ -1,1 +1,5 @@
 install_nginx: False
+mysqlshow_bin: mysqlshow
+mysql_client: mysql
+anemometer_mysql_ip: 127.0.0.1
+anemometer_php_fpm_port: '127.0.0.1:9000'
