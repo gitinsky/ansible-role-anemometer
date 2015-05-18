@@ -32,13 +32,16 @@
   shell: pt-query-digest --version | awk '{print $2}'
   register: version
 
+- name: print version
+  debug: var=version
+
 - name: put < 2.2 script
   template: src=anemometer_lessthan2.2.sh dest=/root/anemometer.sh mode=0755
-  when: "{{ version | version_compare('2.2', '<') }}"
+  when: "{{ version.stdout | version_compare('2.2', '<') }}"
 
 - name: put >= 2.2 script
   template: src=anemometer_gethan2.2.sh dest=/root/anemometer.sh mode=0755
-  when: "{{ version | version_compare('2.2', '>=') }}"
+  when: "{{ version.stdout | version_compare('2.2', '>=') }}"
 
 - name: put a cron task
   template: src=anemometer dest=/etc/cron.d/anemometer
