@@ -64,4 +64,4 @@
   apt: name=python-passlib state=present
 
 - name: set basic auth
-  htpasswd: path=/etc/nginx/htpasswd.anemometer name={{ anemometer_user }} password={{ anemometer_password }} owner=root mode=0640
+  htpasswd: path=/etc/nginx/htpasswd.anemometer name={{ anemometer_user }} password={{ anemometer_password }} owner=root group=www-data mode=0640
