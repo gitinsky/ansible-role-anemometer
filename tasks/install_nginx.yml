@@ -31,17 +31,17 @@
   when: ansible_os_family  == "Debian"
 
 - name: set catch_workers_output to yes
-  lineinfile: dest=/etc/php-fpm.d/www.conf regexp='^;?catch_workers_output' line='catch_workers_output = yes'
+  lineinfile: dest=/etc/php-fpm.d/www.conf regexp='^;?catch_workers_output' line='catch_workers_output = yes' backup=yes
   notify: restart php-fpm
   when: ansible_os_family  == "RedHat"
 
 - name: set catch_workers_output to yes
-  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp='^;?catch_workers_output' line='catch_workers_output = yes'
+  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp='^;?catch_workers_output' line='catch_workers_output = yes' backup=yes
   notify: restart php-fpm
   when: ansible_os_family  == "Debian"
 
 - name: set host:port to 127.0.0.1:9000
-  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp='^listen =' line='listen = {{ anemometer_php_fpm_port }}'
+  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp='^listen =' line='listen = {{ anemometer_php_fpm_port }}' backup=yes
   notify: restart php-fpm
   when: ansible_os_family  == "Debian"
 
@@ -57,7 +57,7 @@
   when: ansible_os_family  == "Debian"
 
 - name: put anemometer template
-  template: src=anemometer.conf dest=/etc/nginx/conf.d/anemometer.conf
+  template: src=anemometer.conf dest=/etc/nginx/conf.d/anemometer.conf backup=yes
   notify: restart nginx
 
 - name: install python-passlib
